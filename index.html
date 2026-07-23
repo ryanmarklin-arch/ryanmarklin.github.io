@@ -555,6 +555,49 @@
     var msgEl = document.getElementById('heatMsg');
     var won = false;
 
+    // ---- Sound: a soft marimba style "pop" made with the Web Audio API (no files needed) ----
+    var audioCtx = null;
+    function getAudio(){
+      if (!audioCtx){
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function playNote(freq, when, dur, vol){
+      var ctx = getAudio();
+      if (!ctx) return;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, when);
+      gain.gain.setValueAtTime(0, when);
+      gain.gain.linearRampToValueAtTime(vol, when + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(when);
+      osc.stop(when + dur + 0.05);
+    }
+    function playPlant(){
+      var ctx = getAudio();
+      if (!ctx) return;
+      var t = ctx.currentTime;
+      // Each tree planted plays one step up a pentatonic scale, so filling
+      // the board sounds like a little melody
+      var scale = [392, 440, 494, 587, 659, 784, 880, 988, 1175, 1319]; // G major pentatonic
+      var idx = Math.min(scale.length - 1, TREES - treesLeft);
+      playNote(scale[idx], t, 0.28, 0.22);          // main tone
+      playNote(scale[idx] * 2, t, 0.14, 0.06);      // soft sparkle an octave up
+    }
+    function playWin(){
+      var ctx = getAudio();
+      if (!ctx) return;
+      var t = ctx.currentTime;
+      playNote(523, t,        0.25, 0.18);  // C
+      playNote(659, t + 0.12, 0.25, 0.18);  // E
+      playNote(784, t + 0.24, 0.40, 0.20);  // G
+    }
+
     // Map a temperature (82–100°F) to a color, tuned per light/dark theme
     function colorFor(t){
       var p = Math.min(1, Math.max(0, (t - 82) / 18)); // 0 cool, 1 hot
@@ -611,6 +654,7 @@
 
       if (!won && avg < GOAL){
         won = true;
+        playWin();
         msgEl.textContent = 'Nice! The neighborhood is below ' + GOAL + '°F with ' + treesLeft + ' tree' + (treesLeft === 1 ? '' : 's') + ' to spare. 🌆';
       } else if (!won && treesLeft === 0){
         msgEl.textContent = 'Out of trees! Avg is ' + avg.toFixed(1) + '°F. Hit “Start over” and try hotter spots first.';
@@ -623,6 +667,7 @@
       if (won || treesLeft === 0 || trees[i]) return;
       trees[i] = true;
       treesLeft--;
+      playPlant();
       var col = i % COLS, row = Math.floor(i / COLS);
       // A tree cools itself a lot and its neighbors a little
       for (var r = row - 1; r <= row + 1; r++){
