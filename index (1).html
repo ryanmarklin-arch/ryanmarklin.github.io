@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- [EDIT] Change the page title below (shows in the browser tab) -->
+<title>Ryan Lin | Portfolio</title>
+<meta name="description" content="Portfolio of Ryan Lin, a student developer in New York City building tools for online safety and climate resilience.">
+
+<!-- Custom fonts: Newsreader (serif display) & Inter Tight (body). Falls back to system fonts offline. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --accent:#4a6f5d;            /* changed live by the swatches */
+    --paper:#faf9f6;
+    --ink:#1d1b18;
+    --muted:#6e6a62;
+    --hairline:#e2ded6;
+    --serif:"Newsreader", Georgia, "Times New Roman", serif;
+    --sans:"Inter Tight", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  /* Dark mode: applied by the moon/sun toggle (and auto-detected on first visit) */
+  html[data-theme="dark"]{
+    --paper:#161513;
+    --ink:#ece8e1;
+    --muted:#9a948a;
+    --hairline:#2e2c29;
+  }
+  html[data-theme="dark"] .swatch-btn{ border-color:rgba(255,255,255,.28); }
+
+  .mode-btn{
+    width:30px; height:30px; border-radius:50%; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--hairline);
+    color:var(--muted); font-size:.9rem; line-height:1;
+    transition:border-color .15s, color .15s, transform .15s;
+  }
+  .mode-btn:hover{ border-color:var(--accent); color:var(--accent); transform:rotate(15deg); }
+
+  body{ transition:background-color .25s, color .25s; }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:0 24px; }
+
+  a{ color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .15s; }
+  a:hover, a:focus-visible{ border-bottom-color:var(--accent); }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:2px; }
+
+  /* ---------- Top bar with color swatches ---------- */
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 0;
+  }
+  .wordmark{
+    font-family:var(--serif); font-weight:500; font-size:1.05rem; letter-spacing:.01em;
+    color:var(--ink); border:none;
+  }
+  .swatches{ display:flex; gap:8px; }
+  .swatch-btn{
+    width:18px; height:18px; border-radius:50%;
+    border:1px solid rgba(0,0,0,.18); cursor:pointer;
+    transition:transform .15s;
+  }
+  .swatch-btn:hover{ transform:scale(1.2); }
+  .swatch-btn[aria-pressed="true"]{ box-shadow:0 0 0 2px var(--paper), 0 0 0 4px var(--ink); }
+
+  /* ---------- Header / hero ---------- */
+  header.hero{ padding:64px 0 56px; }
+
+  /* Avatar container (see README §3 to swap the monogram for a photo) */
+  .avatar{
+    width:76px; height:76px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--accent); color:#fff;
+    font-family:var(--serif); font-size:1.6rem; font-weight:500; letter-spacing:.04em;
+    object-fit:cover; /* keeps a photo cropped nicely if you swap one in */
+    margin-bottom:28px;
+    user-select:none;
+  }
+
+  .eyebrow{
+    font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:14px;
+  }
+  .eyebrow .dot{ color:var(--accent); }
+
+  h1{
+    font-family:var(--serif); font-weight:400; font-size:clamp(2.4rem, 6vw, 3.4rem);
+    line-height:1.12; letter-spacing:-.01em; margin-bottom:20px;
+    color:var(--accent); /* headline follows whichever swatch is selected */
+    transition:color .25s;
+  }
+  h1 em{ font-style:italic; color:var(--accent); }
+
+  .lede{ font-size:1.05rem; color:var(--muted); max-width:56ch; }
+
+  .hero-links{ margin-top:26px; display:flex; flex-wrap:wrap; gap:10px 22px; font-size:.92rem; font-weight:500; }
+
+  /* ---------- Sections ---------- */
+  section{ padding:44px 0; border-top:1px solid var(--hairline); }
+
+  h2{
+    font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:28px;
+  }
+
+  .entry{ display:grid; grid-template-columns:110px 1fr; gap:8px 28px; padding:18px 0; }
+  .entry + .entry{ border-top:1px solid var(--hairline); }
+  .entry .when{
+    font-size:.8rem; color:var(--muted); padding-top:5px;
+    font-variant-numeric:tabular-nums;
+  }
+  .entry h3{ font-family:var(--serif); font-weight:500; font-size:1.25rem; line-height:1.3; }
+  .entry .role{ font-size:.85rem; color:var(--accent); font-weight:500; margin:2px 0 8px; }
+  .entry p{ color:var(--muted); font-size:.95rem; max-width:60ch; }
+  .entry p + p{ margin-top:8px; }
+
+  .tags{ margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{
+    font-size:.72rem; font-weight:500; letter-spacing:.02em;
+    color:var(--ink); background:transparent;
+    border:1px solid var(--hairline); border-radius:999px; padding:3px 10px;
+  }
+
+  /* ---------- About ---------- */
+  .about p{ max-width:62ch; color:var(--ink); }
+  .about p + p{ margin-top:14px; }
+
+  /* ---------- Honors ---------- */
+  ul.plain{ list-style:none; }
+  ul.plain li{
+    padding:10px 0; border-top:1px solid var(--hairline);
+    display:flex; gap:14px; align-items:baseline; font-size:.95rem;
+  }
+  ul.plain li:first-child{ border-top:none; }
+  ul.plain li::before{ content:"·"; color:var(--accent); flex:none; }
+
+  /* ---------- Playground: Cool the Block mini-game ---------- */
+  .playground-intro{ color:var(--muted); font-size:.95rem; max-width:58ch; margin-bottom:20px; }
+  .heat-grid{
+    display:grid; grid-template-columns:repeat(12, 1fr); gap:4px;
+    max-width:560px; user-select:none;
+  }
+  .cell{
+    aspect-ratio:1; border:none; border-radius:4px; cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.7rem; line-height:1;
+    transition:background-color .35s, transform .12s;
+  }
+  .cell:hover{ transform:scale(1.12); }
+  .cell.tree::after{ content:"🌳"; font-size:.85em; }
+  .heat-hud{
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 24px;
+    margin-top:16px; max-width:560px;
+  }
+  .heat-stat{ font-size:.8rem; color:var(--muted); }
+  .heat-stat strong{
+    font-family:var(--serif); font-weight:500; font-size:1.3rem; color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .heat-reset{
+    margin-left:auto; cursor:pointer; background:transparent;
+    border:1px solid var(--hairline); border-radius:999px; padding:6px 16px;
+    font-family:var(--sans); font-size:.78rem; font-weight:600; color:var(--muted);
+    transition:border-color .15s, color .15s;
+  }
+  .heat-reset:hover{ border-color:var(--accent); color:var(--accent); }
+  .heat-msg{ margin-top:10px; font-size:.85rem; color:var(--accent); min-height:1.4em; font-weight:500; }
+
+  @media (prefers-reduced-motion:reduce){
+    .cell{ transition:none; }
+    .cell:hover{ transform:none; }
+  }
+
+  /* ---------- Contact form ---------- */
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:560px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.full{ grid-column:1 / -1; }
+  .field label{
+    font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted);
+  }
+  .field input, .field textarea{
+    font-family:var(--sans); font-size:.95rem; color:var(--ink);
+    background:transparent; border:none; border-bottom:1px solid var(--hairline);
+    padding:8px 2px; border-radius:0;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none; border-bottom-color:var(--accent);
+  }
+  .field textarea{ resize:vertical; min-height:96px; line-height:1.5; }
+  .send-btn{
+    grid-column:1 / -1; justify-self:start; cursor:pointer;
+    font-family:var(--sans); font-size:.85rem; font-weight:600; letter-spacing:.06em;
+    color:var(--paper); background:var(--accent);
+    border:none; border-radius:999px; padding:11px 26px;
+    transition:opacity .15s;
+  }
+  .send-btn:hover{ opacity:.85; }
+  .form-note{ margin-top:14px; font-size:.8rem; color:var(--muted); max-width:56ch; }
+
+  /* ---------- Footer ---------- */
+  footer{ border-top:1px solid var(--hairline); padding:40px 0 64px; }
+  footer .big{
+    font-family:var(--serif); font-size:clamp(1.5rem, 4vw, 2rem); font-weight:400; margin-bottom:12px;
+  }
+  footer .fine{ margin-top:26px; font-size:.78rem; color:var(--muted); }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:560px){
+    .entry{ grid-template-columns:1fr; gap:2px; }
+    .entry .when{ padding-top:0; }
+    header.hero{ padding:44px 0 40px; }
+    .form-grid{ grid-template-columns:1fr; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    .swatch-btn, a{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ===================== TOP BAR ===================== -->
+  <nav class="topbar" aria-label="Site">
+    <!-- [EDIT] Your name / wordmark -->
+    <a class="wordmark" href="#top">Ryan Lin</a>
+
+    <div style="display:flex; align-items:center; gap:16px;">
+      <!-- Theme swatches: click to change the accent color. Edit the hex codes in BOTH
+           data-color and style to customize (see README §4). -->
+      <div class="swatches" role="group" aria-label="Theme color">
+        <button class="swatch-btn" data-color="#4a6f5d" style="background-color:#4a6f5d;" aria-label="Forest green theme" aria-pressed="true"></button>
+        <button class="swatch-btn" data-color="#44518f" style="background-color:#44518f;" aria-label="Indigo theme" aria-pressed="false"></button>
+        <button class="swatch-btn" data-color="#a8503c" style="background-color:#a8503c;" aria-label="Rust theme" aria-pressed="false"></button>
+        <button class="swatch-btn" data-color="#7c4b66" style="background-color:#7c4b66;" aria-label="Plum theme" aria-pressed="false"></button>
+        <button class="swatch-btn" data-color="#33656b" style="background-color:#33656b;" aria-label="Teal theme" aria-pressed="false"></button>
+      </div>
+      <!-- Light/dark toggle -->
+      <button class="mode-btn" id="modeToggle" type="button" aria-label="Switch to dark mode" title="Toggle light / dark">☾</button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero" id="top">
+    <!-- If you ever want a photo here, add this line (put me.jpg in the same folder):
+         <img class="avatar" src="me.jpg" alt="Ryan Lin"> -->
+
+    <!-- [EDIT] Location and school -->
+    <p class="eyebrow">New York, NY <span class="dot">·</span> Stuyvesant High School, Class of 2029</p>
+
+    <!-- [EDIT] Your headline -->
+    <h1>Hi, I'm Ryan. I make things that are playable.</h1>
+
+    <!-- [EDIT] One-sentence intro -->
+    <p class="lede">Most of my projects start with a real problem or a real dataset: a scam text someone in my family almost fell for, a heat wave in Harlem, a kid at a STEM fair who's never written a line of code. When I'm not at a keyboard I'm usually in a pool or behind a fencing mask.</p>
+
+    <div class="hero-links">
+      <!-- [EDIT] Your links. Delete any you don't use. -->
+      <a href="mailto:ryanmarklin@gmail.com">ryanmarklin@gmail.com</a>
+      <a href="https://github.com/yourusername">GitHub</a> <!-- [EDIT] replace yourusername -->
+      <a href="https://www.linkedin.com/in/yourusername">LinkedIn</a> <!-- [EDIT] replace or delete -->
+    </div>
+  </header>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="about" id="about">
+    <h2>About</h2>
+    <!-- [EDIT] Rewrite this in your own voice. This is the most-read text on the page. -->
+    <p>I'm a student at Stuyvesant with a 4.0 and a schedule I probably shouldn't have agreed to: varsity swim, varsity fencing, JV policy debate, and Hapkido on the side (High Blue Belt, eight levels in). The thing I keep coming back to, though, is building software around real data. Last summer that meant Climate Atlas, a game where the map of Harlem is generated from actual heat and tree census data, and a cybersecurity program at NYU Tandon.</p>
+    <p>I also run the New York chapter of Little League Coding and coach swimming with the BlueFins, which mostly means explaining the same idea five different ways until one of them clicks. Honestly, that part might be my favorite skill I've picked up.</p>
+  </section>
+
+  <!-- ===================== PLAYGROUND ===================== -->
+  <section id="playground">
+    <h2>Playground: Cool the Block</h2>
+    <p class="playground-intro">I built a tiny version of my Climate Atlas project you can play right here. Every square is a city block on a hot day, and darker means hotter. You get <strong>10 trees</strong>; click to plant one and it cools the blocks around it. Try to get the neighborhood under 88°F. (It's harder than it looks if you waste trees on the edges.)</p>
+
+    <div class="heat-grid" id="heatGrid" role="grid" aria-label="Interactive city heat map. Click a square to plant a tree."></div>
+
+    <div class="heat-hud">
+      <span class="heat-stat">Avg temp <strong id="heatAvg">...</strong></span>
+      <span class="heat-stat">Trees left <strong id="treesLeft">10</strong></span>
+      <button class="heat-reset" id="heatReset" type="button">Start over</button>
+    </div>
+    <p class="heat-msg" id="heatMsg"></p>
+  </section>
+
+  <!-- ===================== PROJECTS &amp; EXPERIENCE ===================== -->
+  <section id="work">
+    <h2>Projects &amp; Experience</h2>
+
+    <article class="entry">
+      <div class="when">Summer 2026</div>
+      <div>
+        <h3>Climate Atlas <span style="font-family:var(--sans);font-size:.8rem;color:var(--muted);">(itch.io Climate Jam)</span></h3>
+        <p class="role">Data Lead &amp; Project Manager</p>
+        <p>A data driven strategy game where players manage urban heat and resource efficiency in Harlem using real environmental data. Led the data pipeline end to end: processed Esri Living Atlas heat severity data, the NYC Street Tree Census, and building footprints in ArcGIS Pro, then wrote Python/ArcPy scripts to automate reprojection, fishnet generation, spatial joins, and export.</p>
+        <p>Built the C# loader that drives Unity's procedural terrain, heat visualization, and tree placement from the real values, and collaborated with a 3 person team on a card based intervention system scored against actual temperature reduction outcomes.</p>
+        <div class="tags">
+          <span class="tag">ArcGIS Pro</span><span class="tag">Python / ArcPy</span><span class="tag">Unity / C#</span><span class="tag">GIS data</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Jul to Aug 2026</div>
+      <div>
+        <h3>NYU Tandon CS4CS</h3>
+        <p class="role">Participant, Computer Science for Cyber Security</p>
+        <p>Studied core systems and security fundamentals: RAM vs. storage architecture, the boot process (firmware, kernel, and OS layering), and how the Linux kernel manages scheduling, memory protection, and hardware access. Covered networking essentials: IP addressing, DNS resolution and caching, and how HTTPS protects data in transit.</p>
+        <p>Gained hands on Linux command line experience (file system hierarchy, permissions, file editing) and studied common attack vectors including brute force and dictionary attacks, password hashing, and security best practices.</p>
+        <div class="tags">
+          <span class="tag">Linux</span><span class="tag">Networking</span><span class="tag">Security fundamentals</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Jan 2026 to now</div>
+      <div>
+        <h3>SafeStep AI</h3>
+        <p class="role">Developer &amp; Project Manager</p>
+        <p>Co-developing an AI powered browser extension that detects and blocks phishing and scam links, texts, and calls in real time. Architected a three layer detection pipeline: offline URL heuristics, Google Safe Browsing reputation checks, and a Grok powered AI layer that explains flagged risks in plain language.</p>
+        <p>Built the Manifest V3 foundation (background service worker, on navigation interception) that stops malicious pages before they render, and manage a 4-person team across heuristics, API integration, UI/UX, and QA.</p>
+        <div class="tags">
+          <span class="tag">JavaScript</span><span class="tag">Manifest V3</span><span class="tag">Grok API</span><span class="tag">Safe Browsing API</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Fall 2025</div>
+      <div>
+        <h3>Civics Unplugged</h3>
+        <p class="role">Innovator Fellow</p>
+        <p>Selected for this online civic leadership and youth empowerment fellowship. Explored ethical AI, urban design, digital citizenship, and law while developing approaches to local community challenges.</p>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Jul to Aug 2020</div>
+      <div>
+        <h3>NYU Tandon Science of Smart Cities</h3>
+        <p class="role">Project Captain</p>
+        <p>Led a team of peers through the SoSC program, managing the full project as we designed and built a model of a utopian city.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ===================== ACTIVITIES & SERVICE ===================== -->
+  <section id="service">
+    <h2>Activities &amp; Service</h2>
+
+    <article class="entry">
+      <div class="when">Jun 2025 to now</div>
+      <div>
+        <h3>Little League Coding, New York Chapter</h3>
+        <p class="role">Chapter Lead</p>
+        <p>Lead the NYC chapter introducing underprivileged adolescents to computer science. Teach core coding concepts, mentor students as they progress, and coordinate STEM fairs at schools across several boroughs.</p>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Jun 2025 to now</div>
+      <div>
+        <h3>BlueFins</h3>
+        <p class="role">Volunteer Swim Coach</p>
+        <p>Teach community members ranging from first time beginners to swimmers refining competitive strokes. Lifeguard certified with CPR/AED (American Red Cross).</p>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Jul 2026 to now</div>
+      <div>
+        <h3>M&amp;M Consulting</h3>
+        <p class="role">Associate</p>
+        <!-- [EDIT] If you can, add one specific detail here (what kind of applicants/events?) -->
+        <p>Support open house events and crowd management, and assist with reviewing applicants.</p>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="when">Ongoing</div>
+      <div>
+        <h3>At Stuyvesant &amp; Beyond</h3>
+        <p class="role">Athletics &amp; Clubs</p>
+        <p>Varsity Swim Team · Varsity Fencing Team · JV Policy Debate · Environmental Club · Coral Reef Club · High Blue Belt in Hapkido (World Martial Arts Center, 8 levels completed).</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ===================== HONORS ===================== -->
+  <section id="honors">
+    <h2>Honors &amp; Certifications</h2>
+    <!-- [EDIT] Add new awards to the top of this list as you earn them. -->
+    <ul class="plain">
+      <li>PSAL: 4th Place, Novice Division</li>
+      <li>SADL Policy Debate League: Individual Award</li>
+      <li>Lifeguarding with CPR/AED, American Red Cross</li>
+    </ul>
+  </section>
+
+  <!-- ===================== CONTACT ME ===================== -->
+  <section id="contact-form">
+    <h2>Contact Me</h2>
+    <!-- This form works with no server: pressing "Send message" opens the visitor's
+         email app with everything pre-filled, addressed to you.
+         [EDIT] If you want messages delivered without the visitor's email app,
+         sign up free at formspree.io and follow their one-line setup instead. -->
+    <form class="form-grid" id="contactForm" novalidate>
+      <div class="field">
+        <label for="cf-first">First name</label>
+        <input type="text" id="cf-first" name="firstName" autocomplete="given-name" required>
+      </div>
+      <div class="field">
+        <label for="cf-last">Last name</label>
+        <input type="text" id="cf-last" name="lastName" autocomplete="family-name" required>
+      </div>
+      <div class="field full">
+        <label for="cf-email">Your email</label>
+        <input type="email" id="cf-email" name="email" autocomplete="email" required>
+      </div>
+      <div class="field full">
+        <label for="cf-msg">Message</label>
+        <textarea id="cf-msg" name="message" required></textarea>
+      </div>
+      <button type="submit" class="send-btn">Send message</button>
+    </form>
+    <p class="form-note" id="formNote">Sending opens your email app with the message ready to go.</p>
+  </section>
+
+  <!-- ===================== FOOTER / CONTACT ===================== -->
+  <footer id="contact">
+    <p class="big">Say hi.</p>
+    <!-- [EDIT] Contact line. Tip: avoid putting your phone number on a public website. -->
+    <p>The fastest way to reach me is <a href="mailto:ryanmarklin@gmail.com">ryanmarklin@gmail.com</a>. I'm in New York and I actually check it.</p>
+    <p class="fine">© <span id="year"></span> Ryan Lin. Written by hand in one HTML file. View source if you're curious.</p>
+  </footer>
+
+</div>
+
+<script>
+  // ---- Light / dark mode toggle ----
+  (function(){
+    var btn = document.getElementById('modeToggle');
+    var root = document.documentElement;
+
+    function apply(mode){
+      root.dataset.theme = mode;
+      btn.textContent = mode === 'dark' ? '☀' : '☾';
+      btn.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      // Tell the heat-grid game to repaint with theme-appropriate colors
+      document.dispatchEvent(new CustomEvent('themechange'));
+    }
+
+    // First visit: follow the device's setting. After that: remember the choice.
+    var initial = 'light';
+    try {
+      var saved = localStorage.getItem('themeMode');
+      if (saved === 'dark' || saved === 'light') initial = saved;
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) initial = 'dark';
+    } catch(e){
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) initial = 'dark';
+    }
+    apply(initial);
+
+    btn.addEventListener('click', function(){
+      var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      apply(next);
+      try { localStorage.setItem('themeMode', next); } catch(e){}
+    });
+  })();
+
+  // ---- Theme swatches: set accent color + remember the choice ----
+  (function(){
+    var buttons = document.querySelectorAll('.swatch-btn');
+
+    function apply(color){
+      document.documentElement.style.setProperty('--accent', color);
+      buttons.forEach(function(b){
+        b.setAttribute('aria-pressed', b.dataset.color === color ? 'true' : 'false');
+      });
+    }
+
+    buttons.forEach(function(b){
+      b.addEventListener('click', function(){
+        apply(b.dataset.color);
+        try { localStorage.setItem('themeColor', b.dataset.color); } catch(e){}
+      });
+    });
+
+    // Restore saved color (wrapped in try/catch so the page still works
+    // in browsers or previews that block storage)
+    try {
+      var saved = localStorage.getItem('themeColor');
+      if (saved) apply(saved);
+    } catch(e){}
+  })();
+
+  // ---- Contact form: composes an email in the visitor's mail app ----
+  (function(){
+    var form = document.getElementById('contactForm');
+    if (!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var first = document.getElementById('cf-first').value.trim();
+      var last  = document.getElementById('cf-last').value.trim();
+      var email = document.getElementById('cf-email').value.trim();
+      var msg   = document.getElementById('cf-msg').value.trim();
+
+      if (!first || !last || !email || !msg){
+        document.getElementById('formNote').textContent = 'Please fill in every field before sending.';
+        return;
+      }
+
+      // [EDIT] Your email address goes here:
+      var to = 'ryanmarklin@gmail.com';
+      var subject = 'Portfolio message from ' + first + ' ' + last;
+      var body = msg + '\n\n' + first + ' ' + last + ' (' + email + ')';
+      window.location.href = 'mailto:' + to +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body);
+    });
+  })();
+
+  // ---- Playground: Cool the Block ----
+  // A miniature homage to Climate Atlas: plant trees to cool a heat grid.
+  (function(){
+    var grid = document.getElementById('heatGrid');
+    if (!grid) return;
+
+    var COLS = 12, ROWS = 8, TREES = 10, GOAL = 88;
+    var heat = [], trees = [], treesLeft = TREES;
+    var avgEl = document.getElementById('heatAvg');
+    var leftEl = document.getElementById('treesLeft');
+    var msgEl = document.getElementById('heatMsg');
+    var won = false;
+
+    // Map a temperature (82–100°F) to a color, tuned per light/dark theme
+    function colorFor(t){
+      var p = Math.min(1, Math.max(0, (t - 82) / 18)); // 0 cool, 1 hot
+      var dark = document.documentElement.dataset.theme === 'dark';
+      var r, g, b;
+      if (dark){
+        r = Math.round(46 + p * 128);   // 46  -> 174
+        g = Math.round(43 + p * 34);    // 43  -> 77
+        b = Math.round(39 + p * 15);    // 39  -> 54
+      } else {
+        r = Math.round(248 - p * 90);   // 248 -> 158
+        g = Math.round(240 - p * 165);  // 240 -> 75
+        b = Math.round(230 - p * 175);  // 230 -> 55
+      }
+      return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
+    function seed(){
+      heat = []; trees = []; treesLeft = TREES; won = false;
+      // Two random "heat island" hot spots, cooler toward the edges
+      var h1c = 2 + Math.floor(Math.random() * (COLS - 4));
+      var h1r = 2 + Math.floor(Math.random() * (ROWS - 4));
+      var h2c = 2 + Math.floor(Math.random() * (COLS - 4));
+      var h2r = 2 + Math.floor(Math.random() * (ROWS - 4));
+      for (var r = 0; r < ROWS; r++){
+        for (var c = 0; c < COLS; c++){
+          var d1 = Math.hypot(c - h1c, r - h1r);
+          var d2 = Math.hypot(c - h2c, r - h2r);
+          var d = Math.min(d1, d2);
+          var t = 100 - d * 2.2 + (Math.random() * 2 - 1);
+          heat.push(Math.max(84, Math.min(100, t)));
+          trees.push(false);
+        }
+      }
+    }
+
+    function average(){
+      var s = 0;
+      for (var i = 0; i < heat.length; i++) s += heat[i];
+      return s / heat.length;
+    }
+
+    function render(){
+      var cells = grid.children;
+      for (var i = 0; i < cells.length; i++){
+        cells[i].style.backgroundColor = colorFor(heat[i]);
+        cells[i].classList.toggle('tree', trees[i]);
+        cells[i].setAttribute('aria-label',
+          Math.round(heat[i]) + ' degrees' + (trees[i] ? ', tree planted' : ''));
+      }
+      var avg = average();
+      avgEl.textContent = avg.toFixed(1) + '°F';
+      leftEl.textContent = treesLeft;
+
+      if (!won && avg < GOAL){
+        won = true;
+        msgEl.textContent = 'Nice! The neighborhood is below ' + GOAL + '°F with ' + treesLeft + ' tree' + (treesLeft === 1 ? '' : 's') + ' to spare. 🌆';
+      } else if (!won && treesLeft === 0){
+        msgEl.textContent = 'Out of trees! Avg is ' + avg.toFixed(1) + '°F. Hit “Start over” and try hotter spots first.';
+      } else if (!won){
+        msgEl.textContent = '';
+      }
+    }
+
+    function plant(i){
+      if (won || treesLeft === 0 || trees[i]) return;
+      trees[i] = true;
+      treesLeft--;
+      var col = i % COLS, row = Math.floor(i / COLS);
+      // A tree cools itself a lot and its neighbors a little
+      for (var r = row - 1; r <= row + 1; r++){
+        for (var c = col - 1; c <= col + 1; c++){
+          if (r < 0 || r >= ROWS || c < 0 || c >= COLS) continue;
+          var j = r * COLS + c;
+          var isCenter = (j === i);
+          heat[j] = Math.max(80, heat[j] - (isCenter ? 6 : 3));
+        }
+      }
+      render();
+    }
+
+    // Build the grid once
+    for (var i = 0; i < COLS * ROWS; i++){
+      var btn = document.createElement('button');
+      btn.className = 'cell';
+      btn.type = 'button';
+      btn.dataset.i = i;
+      btn.addEventListener('click', function(){ plant(+this.dataset.i); });
+      grid.appendChild(btn);
+    }
+
+    document.getElementById('heatReset').addEventListener('click', function(){
+      seed(); render();
+    });
+
+    // Repaint the map when light/dark mode is toggled
+    document.addEventListener('themechange', render);
+
+    seed(); render();
+  })();
+
+  // ---- Auto-update footer year ----
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
